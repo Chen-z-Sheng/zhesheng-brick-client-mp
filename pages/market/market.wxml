@@ -1,0 +1,40 @@
+<view class="container">
+  <!-- 搜索框 -->
+  <view class="search-section">
+    <input class="search-input" type="text" placeholder="请输入关键词" bindinput="onSearchInput" confirm-type="search" />
+  </view>
+
+  <!-- 一级分类（横向滚动） -->
+  <view class="category-section">
+    <scroll-view scroll-x="true" class="category-scroll" scroll-left="{{categoryScrollLeft}}">
+      <view class="category-item {{index === activeCategory ? 'active' : ''}}" wx:for="{{categories}}" wx:key="index" bindtap="onCategorySelect" data-category="{{item}}" data-index="{{index}}" id="category-{{index}}">
+        <text class="category-text">{{item.name}}</text>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 内容区域（二级分类和商品列表同行） -->
+  <view class="content-area">
+    <!-- 二级分类（左侧展示） -->
+    <view class="subcategory-section">
+      <scroll-view scroll-y="true" class="subcategory-scroll" scroll-top="{{subcategoryScrollTop}}">
+        <view class="subcategory-item {{index === activeSubcategory ? 'active' : ''}}" wx:for="{{subcategories}}" wx:key="index" bindtap="onSubCategorySelect" data-subcategory="{{item}}" data-index="{{index}}" id="subcategory-{{index}}">
+          <text class="subcategory-text">{{item.name}}</text>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 商品列表（右侧展示） -->
+    <view class="product-section">
+      <view class="product-item" wx:for="{{products}}" wx:key="index" bindtap="onProductSelect" data-product="{{item}}">
+        <view class="product-info-left">
+          <text class="product-name">{{item.name}}</text>
+          <text class="update-date">{{item.updateDate}}</text>
+        </view>
+        <view class="product-info-right">
+          <text class="product-price">¥{{item.price}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

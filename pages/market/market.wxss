@@ -1,0 +1,178 @@
+.container {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 搜索框 */
+.search-section {
+  margin: 20rpx 0 30rpx;
+}
+
+.search-input {
+  width: 100%;
+  height: 80rpx; /* 增加高度 */
+  padding: 0 30rpx; /* 适当的内边距 */
+  border-radius: 40rpx; /* 圆润的边角 */
+  font-size: 28rpx;
+  background-color: #ffffff; /* 白色背景 */
+  box-sizing: border-box;
+  color: #333;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1); /* 柔和的阴影 */
+  border: none; /* 移除边框 */
+  line-height: 80rpx; /* 确保文字垂直居中 */
+}
+
+/* 调整placeholder样式 */
+.search-input::placeholder {
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 一级分类（横向滚动） */
+.category-section {
+  margin-top: 20rpx;
+  margin-bottom: 20rpx;
+  width: 100%;
+}
+
+.category-scroll {
+  white-space: nowrap;
+  width: 100%;
+  padding: 10rpx 0;
+}
+
+.category-item {
+  display: inline-block;
+  padding: 12rpx 18rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  min-width: 120rpx;
+  text-align: center;
+  margin-right: 16rpx;
+  transition: all 0.3s ease;
+}
+
+.category-item.active {
+  background-color: #07c160;
+}
+
+.category-item.active .category-text {
+  color: #fff;
+}
+
+.category-text {
+  font-size: 28rpx;
+  color: #333;
+}
+
+/* 内容区域 - 左右布局 */
+.content-area {
+  width: 100%;
+  margin-top: 20rpx;
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 240rpx);
+}
+
+/* 二级分类（左侧展示） */
+.subcategory-section {
+  width: 200rpx;
+  padding-right: 10rpx;
+}
+
+.subcategory-scroll {
+  height: 100%;
+  overflow-y: auto;
+}
+
+.subcategory-item {
+  padding: 12rpx 18rpx;
+  background-color: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  margin-bottom: 16rpx;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.subcategory-item.active {
+  background-color: #f2f2f2;
+  border-left: 4rpx solid #07c160;
+}
+
+.subcategory-item.active .subcategory-text {
+  color: #07c160;
+  font-weight: bold;
+}
+
+.subcategory-text {
+  font-size: 24rpx;
+  color: #666;
+}
+
+/* 商品列表展示（右侧） */
+.product-section {
+  flex: 1;
+  margin-left: 20rpx;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.product-info-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex: 1;
+}
+
+.product-info-right {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  padding-left: 20rpx;
+}
+
+.product-item {
+  padding: 20rpx;
+  background-color: #fff;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
+  margin-bottom: 10rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  min-height: 120rpx;
+}
+
+.product-name {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10rpx;
+  text-align: left;
+}
+.product-info {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10rpx;
+}
+
+.product-price {
+  font-size: 32rpx;
+  color: #fa5151;
+  font-weight: bold;
+  text-align: right;
+}
+
+.update-date {
+  font-size: 24rpx;
+  color: #999;
+  text-align: left;
+}

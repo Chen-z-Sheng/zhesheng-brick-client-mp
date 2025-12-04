@@ -1,0 +1,20 @@
+<!--pages/form/form.wxml-->
+<view class="container">
+  <view class="header">
+    <text class="title">报单中心</text>
+  </view>
+  
+  <view class="form-options">
+    <!-- 行情报单模块 -->
+    <view class="form-option market" bindtap="navigateToForm" data-type="market">
+      <view class="option-title">行情报单</view>
+      <view class="option-desc">行情表有的从这里报单</view>
+    </view>
+    
+    <!-- 普通方案报单模块 -->
+    <view class="form-option normal" bindtap="navigateToForm" data-type="normal">
+      <view class="option-title">固结报单</view>
+      <view class="option-desc">没有行情的这里报单</view>
+    </view>
+  </view>
+</view>

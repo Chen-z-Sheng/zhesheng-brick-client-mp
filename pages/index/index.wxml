@@ -1,0 +1,56 @@
+<view class="container">
+  <!-- 1. 图片轮播 Carousel -->
+  <swiper class="carousel" autoplay="true" interval="3000" duration="500" circular="true" indicator-dots="true">
+    <swiper-item>
+      <image src="/images/carousel/1.jpeg" mode="aspectFill" class="carousel-image"></image>
+    </swiper-item>
+    <swiper-item>
+      <image src="/images/carousel/2.png" mode="aspectFill" class="carousel-image"></image>
+    </swiper-item>
+  </swiper>
+
+  <!-- 2. 水平滚动公告栏 -->
+  <view class="announcement-banner" bindtap="onAnnouncementTap">
+    <view class="announcement-icon">📢</view>
+    <view class="announcement-wrapper">
+      <scroll-view scroll-x="true" class="announcement-scroll" enable-flex="true" scroll-with-animation="true" autoplay scroll-duration="15000">
+        <text class="announcement-text">欢迎使用物品收纳箱服务！最新公告：服务升级，效率提升！更多优惠活动即将上线，敬请期待... 新用户注册即送20元优惠券，点击查看详情 →</text>
+      </scroll-view>
+    </view>
+    <view class="announcement-arrow">→</view>
+  </view>
+
+  <!-- 3. 流程图1：标准流程 -->
+  <view class="process-section">
+    <text class="section-title">标准流程</text>
+    <view class="process-flow">
+      <view class="process-step">
+        <image src="/images/process/scheme.png" mode="widthFix" class="step-image" />
+        <text class="step-text">下单</text>
+      </view>
+      <image src="/images/arrow.png" mode="widthFix" class="arrow-image" />
+      <view class="process-step">
+        <image src="/images/process/send.png" mode="widthFix" class="step-image" />
+        <text class="step-text">到货转寄</text>
+      </view>
+      <image src="/images/arrow.png" mode="widthFix" class="arrow-image" />
+      <view class="process-step">
+        <image src="/images/process/inspection.png" mode="widthFix" class="step-image" />
+        <text class="step-text">验货入库</text>
+      </view>
+      <image src="/images/arrow.png" mode="widthFix" class="arrow-image" />
+      <view class="process-step">
+        <image src="/images/process/payment.png" mode="widthFix" class="step-image" />
+        <text class="step-text">结算打款</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="contact-section">
+    <text class="contact-text" data-contact="{{contact}}" bindtap="copyContact">
+      联系方式：{{contact}}（点击复制）
+    </text>
+  </view>
+
+  
+</view>

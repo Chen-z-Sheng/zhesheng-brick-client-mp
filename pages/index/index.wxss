@@ -1,0 +1,180 @@
+.container {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+}
+
+/* 轮播图样式 */
+.carousel {
+  width: 100%;
+  height: 300rpx;
+  margin-bottom: 20rpx;
+  border-radius: 16rpx;
+  overflow: hidden;
+}
+.carousel-image {
+  width: 100%;
+  height: 100%;
+}
+
+/* 公告栏样式 - 修复滚动问题 */
+.announcement-banner {
+  background-color: #fff;
+  border-radius: 12rpx;
+  margin-bottom: 30rpx;
+  padding: 15rpx 20rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+  cursor: pointer;
+}
+.announcement-icon {
+  font-size: 32rpx;
+  margin-right: 15rpx;
+  color: #ff6600;
+  flex-shrink: 0;
+}
+.announcement-wrapper {
+  flex: 1;
+  height: 40rpx;
+  position: relative;
+  overflow: hidden;
+}
+.announcement-scroll {
+  width: 100%;
+  height: 100%;
+}
+.announcement-text {
+  font-size: 28rpx;
+  color: #333;
+  line-height: 40rpx;
+  display: inline-block;
+  padding-right: 100rpx; /* 增加右侧间距确保完全滚动 */
+  white-space: nowrap;
+  animation: scrollText 15s linear infinite; /* 文字滚动动画 */
+}
+
+/* 滚动动画 */
+@keyframes scrollText {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.announcement-arrow {
+  font-size: 24rpx;
+  color: #999;
+  margin-left: 10rpx;
+  flex-shrink: 0;
+}
+
+/* 流程区域通用样式 */
+.process-section {
+  margin-bottom: -16rpx;
+  background-color: #fff;
+  padding: 25rpx;
+  border-radius: 16rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+}
+.section-title {
+  font-size: 34rpx;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 25rpx;
+  color: #333;
+  padding-left: 10rpx;
+  border-left: 6rpx solid #4CAF50;
+}
+
+/* 流程图样式 - 水平布局，确保完全展示 */
+.process-flow {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 改为居中对齐 */
+  width: 100%;
+  gap: 10rpx;
+}
+
+.process-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 120rpx; /* 固定最小宽度，确保对齐 */
+}
+
+/* 流程图标样式 */
+.step-image {
+  width: 60rpx;
+  height: 60rpx;
+  margin-bottom: 10rpx;
+  object-fit: contain;
+}
+
+/* 流程文字样式（优化对齐） */
+.step-text {
+  font-size: 24rpx;
+  color: #666;
+  text-align: center;
+  line-height: 1.3;
+  padding: 0 5rpx;
+  height: 56rpx; /* 增加高度适配"验货入库" */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  word-break: break-word;
+}
+
+/* 箭头图片样式 */
+.arrow-image {
+  width: 35rpx;
+  height: 35rpx;
+  margin: 0 8rpx;
+  object-fit: contain;
+  flex-shrink: 0;
+} 
+
+/* 4. 信息展示 */
+.info-section {
+  margin-top: 30rpx;
+  background-color: #fff;
+  padding: 20rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+}
+.info-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15rpx;
+}
+.info-label {
+  font-size: 28rpx;
+  color: #666;
+}
+.info-value {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+/* 5. 日期选择器 */
+.date-picker-section {
+  margin-top: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  padding: 15rpx 20rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+}
+.date-picker-label {
+  font-size: 28rpx;
+  color: #666;
+}
+.picker-display {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #4CAF50;
+}

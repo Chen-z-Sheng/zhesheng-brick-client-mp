@@ -1,0 +1,58 @@
+<view class="container">
+  <!-- 商品标题 -->
+  <view class="product-header">
+    <text class="product-title">{{productName}}</text>
+    <view class="price-section">
+      <text class="price-label">最高行情:</text>
+      <text class="price-value">¥{{price}}</text>
+    </view>
+    <text class="update-date">{{updateDate}}</text>
+  </view>
+
+  <!-- 规格选择 -->
+  <view class="specs-section">
+    <view class="spec-group" wx:for="{{specs}}" wx:key="name">
+      <text class="spec-title">{{item.name}}:</text>
+      <view class="spec-options">
+        <view class="spec-option {{selectedSpecs[item.name] === option ? 'selected' : ''}}" 
+              wx:for="{{item.options}}" 
+              wx:for-item="option" 
+              wx:key="*this"
+              bindtap="selectSpec" 
+              data-type="{{item.name}}" 
+              data-value="{{option}}">
+          {{option}}
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史行情图表 -->
+  <view class="chart-section">
+    <view class="chart-header">
+      <text class="chart-title">历史行情</text>
+      <view class="chart-period">
+        <view class="period-option {{period === 7 ? 'selected' : ''}}" bindtap="setPeriod" data-period="7">7天</view>
+        <view class="period-option {{period === 30 ? 'selected' : ''}}" bindtap="setPeriod" data-period="30">30天</view>
+      </view>
+    </view>
+    <view class="chart-container">
+      <canvas type="2d" id="priceChart" class="price-chart"></canvas>
+    </view>
+    <view class="trend-prediction {{trendDirection}}">
+      <text class="trend-text">预测趋势: {{trendDirection === 'up' ? '上涨' : '下跌'}}</text>
+      <text class="trend-icon">{{trendDirection === 'up' ? '↑' : '↓'}}</text>
+    </view>
+  </view>
+
+  <!-- 档口报价列表 -->
+  <view class="vendors-section">
+    <text class="vendors-title">档口报价</text>
+    <view class="vendor-list">
+      <view class="vendor-item" wx:for="{{vendors}}" wx:key="id">
+        <text class="vendor-name">{{item.name}}</text>
+        <text class="vendor-price">¥{{item.price}}</text>
+      </view>
+    </view>
+  </view>
+</view>

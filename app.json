@@ -1,0 +1,48 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/market/market",
+    "pages/form/form",
+    "pages/my/my",
+    "pages/detail/detail",
+    "page/submit-form/submit-form"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F6F6F6",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#F6F6F6",
+    "navigationBarTitleText": "泽晟搬砖助手"
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "/images/icon/home.png",
+        "selectedIconPath": "/images/icon/home-avtice.png"
+      },
+      {
+        "pagePath": "pages/market/market",
+        "text": "行情",
+        "iconPath": "/images/icon/market.png",
+        "selectedIconPath": "/images/icon/market-active.png"
+      },
+      {
+        "pagePath": "pages/form/form",
+        "text": "报单",
+        "iconPath": "/images/icon/form.png",
+        "selectedIconPath": "/images/icon/form-active.png"
+      },
+      {
+        "pagePath": "pages/my/my",
+        "text": "我的",
+        "iconPath": "/images/icon/my.png",
+        "selectedIconPath": "/images/icon/my-active.png"
+      }
+    ]
+  }
+}
