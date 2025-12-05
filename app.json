@@ -5,7 +5,8 @@
     "pages/form/form",
     "pages/my/my",
     "pages/detail/detail",
-    "page/submit-form/submit-form"
+    "pages/form-schemes/form-schemes",
+    "pages/login/login"
   ],
   "window": {
     "navigationBarTextStyle": "black",

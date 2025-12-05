@@ -1,0 +1,15 @@
+<view class="container">
+  <view class="field">
+    <text class="label">手机号</text>
+    <input class="input" type="number" placeholder="请输入手机号" bindinput="onInputPhone" maxlength="11" />
+  </view>
+
+  <view class="field">
+    <text class="label">验证码</text>
+    <input class="input" placeholder="请输入验证码" bindinput="onInputCode" maxlength="6" />
+  </view>
+
+  <button class="submit" bindtap="handleLogin">登录</button>
+</view>
+
+

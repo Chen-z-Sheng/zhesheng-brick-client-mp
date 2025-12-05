@@ -1,0 +1,336 @@
+/* 全局样式 */
+.container {
+  padding: 20rpx;
+  background-color: #f5f5f5;
+  min-height: 100vh;
+}
+
+.header {
+  padding: 30rpx 0;
+  border-bottom: 1px solid #e5e5e5;
+  margin-bottom: 20rpx;
+}
+
+.title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-section {
+  background-color: #fff;
+  padding: 30rpx;
+  border-radius: 12rpx;
+  margin-bottom: 20rpx;
+}
+
+.form-item {
+  margin-bottom: 30rpx;
+}
+
+.label {
+  font-size: 28rpx;
+  color: #333;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.label.required {
+  color: #f56c6c;
+  position: relative;
+}
+
+.label.required::before {
+  content: '*';
+  color: #f56c6c;
+  position: absolute;
+  left: -15rpx;
+  top: 0;
+}
+
+.input {
+  height: 80rpx;
+  border: 1px solid #e5e5e5;
+  border-radius: 8rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+.textarea {
+  min-height: 120rpx;
+  border: 1px solid #e5e5e5;
+  border-radius: 8rpx;
+  padding: 20rpx;
+  font-size: 28rpx;
+  box-sizing: border-box;
+}
+
+/* 组合输入框+下拉 */
+.combined-input-select {
+  display: flex;
+  align-items: center;
+  border: 1px solid #e5e5e5;
+  border-radius: 8rpx;
+  overflow: hidden;
+}
+
+.input-with-select {
+  flex: 1;
+  height: 80rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  border: none;
+  outline: none;
+}
+
+.select-arrow {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-left: 1px solid #e5e5e5;
+}
+
+.dropdown-icon {
+  font-size: 24rpx;
+  color: #999;
+}
+
+/* 下拉列表 */
+.dropdown-list {
+  margin-top: 10rpx;
+  border: 1px solid #e5e5e5;
+  border-radius: 8rpx;
+  background-color: #fff;
+  max-height: 400rpx;
+  overflow-y: auto;
+}
+
+.dropdown-item {
+  padding: 20rpx;
+  font-size: 28rpx;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.dropdown-item.active {
+  background-color: #f0f9ff;
+  color: #1677ff;
+}
+
+.dropdown-empty {
+  padding: 30rpx;
+  text-align: center;
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 动态表单样式 */
+.dynamic-form {
+  margin-top: 20rpx;
+}
+
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  padding: 10rpx 0;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  font-size: 28rpx;
+}
+
+.checkbox-label {
+  margin-left: 10rpx;
+}
+
+.picker-input {
+  height: 80rpx;
+  border: 1px solid #e5e5e5;
+  border-radius: 8rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  color: #666;
+  box-sizing: border-box;
+}
+
+.field-desc {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.unsupported-field {
+  font-size: 26rpx;
+  color: #999;
+  padding: 20rpx;
+  text-align: center;
+}
+
+.empty-tip {
+  font-size: 28rpx;
+  color: #999;
+  text-align: center;
+  padding: 40rpx 0;
+}
+
+/* 行情报单样式 */
+.product-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-top: 10rpx;
+}
+
+.product-item {
+  padding: 20rpx;
+  border: 1px solid #e5e5e5;
+  border-radius: 8rpx;
+  width: calc(50% - 10rpx);
+  box-sizing: border-box;
+}
+
+.product-item.selected {
+  border-color: #1677ff;
+  background-color: #f0f9ff;
+}
+
+.product-name {
+  font-size: 28rpx;
+  color: #333;
+  display: block;
+  margin-bottom: 10rpx;
+}
+
+.product-price {
+  font-size: 24rpx;
+  color: #f56c6c;
+}
+
+.selected-products {
+  margin-top: 30rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+.selected-product-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.product-info {
+  flex: 1;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+}
+
+.quantity-btn {
+  width: 60rpx;
+  height: 60rpx;
+  border: 1px solid #e5e5e5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #333;
+}
+
+.quantity-input {
+  width: 80rpx;
+  height: 60rpx;
+  text-align: center;
+  font-size: 28rpx;
+  border-top: 1px solid #e5e5e5;
+  border-bottom: 1px solid #e5e5e5;
+  margin: 0 10rpx;
+  box-sizing: border-box;
+}
+
+.expected-return {
+  font-size: 28rpx;
+  color: #f56c6c;
+  padding: 20rpx 0;
+}
+
+/* 提交按钮区域 */
+.form-footer {
+  display: flex;
+  gap: 20rpx;
+  padding: 20rpx 0;
+}
+
+.draft-btn {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  background-color: #fff;
+  color: #333;
+  border: 1px solid #e5e5e5;
+  border-radius: 8rpx;
+  font-size: 32rpx;
+}
+
+.submit-btn {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  background-color: #1677ff;
+  color: #fff;
+  border-radius: 8rpx;
+  font-size: 32rpx;
+}
+
+/* 图片上传样式 */
+.upload-box {
+  width: 200rpx;
+  height: 200rpx;
+  border: 1px dashed #e5e5e5;
+  border-radius: 8rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploaded-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 8rpx;
+}
+
+.upload-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-icon {
+  font-size: 48rpx;
+  color: #ccc;
+  margin-bottom: 10rpx;
+}
+
+.upload-text {
+  font-size: 24rpx;
+  color: #999;
+}

@@ -14,7 +14,7 @@ Page({
   navigateToForm(e) {
     const type = e.currentTarget.dataset.type;
     wx.navigateTo({
-      url: `/page/submit-form/submit-form?type=${type}`
+      url: `/pages/form-schemes/form-schemes?type=${type}`
     });
   },
 
