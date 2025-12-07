@@ -1,16 +1,35 @@
 const request = require('../utils/request');
 
-// 获取方案列表（原有）
-const fetchPlans = () => request.get('/api/admin/form-schemes');
+// 获取方案列表
+const fetchPlans = (keyword = '') => {
+  const params = {};
 
-// 搜索方案（原有，注意接口路径需和后端对齐）
-const searchPlans = (keyword = '') => request.get('/api/admin/form-schemes/search', { keyword });
+  const kw = (keyword || '').trim();
+  if (kw) {
+    params.keyword = kw;
+  }
 
-// 新增：根据模板ID获取表单模板
-const fetchFormTemplate = (templateId) => request.get(`/api/admin/form-templates/${templateId}`);
+  return request
+    .get('/api/client/form-schemes', params)
+    .then((res) => {
+      const data = res?.data || res;
+      return data || [];
+    });
+};
+
+// 获取模板
+const fetchFormTemplate = (templateId) => {
+  return request
+    .get(`/api/client/form-template/${templateId}`)
+    .then((res) => {
+      const data = res?.data || res;
+      return data;
+    });
+};
+
+// 添加填写记录
 
 module.exports = {
   fetchPlans,
-  searchPlans,
-  fetchFormTemplate,
+  fetchFormTemplate
 };

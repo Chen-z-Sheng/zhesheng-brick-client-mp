@@ -9,15 +9,13 @@
       <view class="form-item">
         <text class="label">选择方案</text>
         <view class="combined-input-select">
-          <input class="input-with-select" placeholder="输入方案名称" bindinput="onPlanSearchInput"
-            value="{{planSearchText}}" />
+          <input class="input-with-select" placeholder="输入方案名称" bindinput="onPlanSearchInput" value="{{planSearchText}}" />
           <view class="select-arrow" bindtap="togglePlanDropdown">
             <text class="dropdown-icon">▼</text>
           </view>
         </view>
         <view class="dropdown-list" wx:if="{{showPlanDropdown}}">
-          <view class="dropdown-item {{planIndex === index ? 'active' : ''}}" wx:for="{{filteredPlanList}}" wx:key="id"
-            bindtap="selectPlan" data-index="{{index}}">
+          <view class="dropdown-item {{planIndex === index ? 'active' : ''}}" wx:for="{{filteredPlanList}}" wx:key="id" bindtap="selectPlan" data-index="{{index}}">
             {{item.name}}
           </view>
           <view class="dropdown-empty" wx:if="{{filteredPlanList.length === 0}}">
@@ -30,23 +28,19 @@
       <block wx:if="{{formTemplate && dynamicFormRules.length > 0}}">
         <view class="dynamic-form" style="--label-width: {{dynamicFormOptions.form.labelWidth}}">
           <!-- 循环渲染每个表单字段 -->
-          <view wx:for="{{dynamicFormRules}}" wx:key="_fc_id" class="form-item"
-            wx:if="{{!item.hidden && item.display}}">
+          <view wx:for="{{dynamicFormRules}}" wx:key="_fc_id" class="form-item" wx:if="{{!item.hidden && item.display}}">
             <text class="label {{item.required ? 'required' : ''}}">
               {{item.title}}{{item.required ? '*' : ''}}
             </text>
 
             <!-- 输入框/密码框 -->
             <block wx:if="{{item.type === 'input' || item.type === 'password'}}">
-              <input class="input" type="{{item.inputType}}" value="{{dynamicFormData[item.bindField]}}"
-                bindinput="onDynamicInputChange" data-field="{{item.bindField}}" placeholder="请输入{{item.title}}"
-                disabled="{{item.disabled}}" />
+              <input class="input" type="{{item.inputType}}" value="{{dynamicFormData[item.bindField]}}" bindinput="onDynamicInputChange" data-field="{{item.bindField}}" placeholder="请输入{{item.title}}" disabled="{{item.disabled}}" />
             </block>
 
             <!-- 多选框 -->
             <block wx:elif="{{item.type === 'checkbox'}}">
-              <checkbox-group bindchange="onDynamicCheckboxChange" data-field="{{item.bindField}}"
-                value="{{dynamicFormData[item.bindField]}}">
+              <checkbox-group bindchange="onDynamicCheckboxChange" data-field="{{item.bindField}}" value="{{dynamicFormData[item.bindField]}}">
                 <view wx:for="{{item.options}}" wx:key="value" class="checkbox-item">
                   <checkbox value="{{item.value}}" />
                   <text class="checkbox-label">{{item.label}}</text>
@@ -56,14 +50,12 @@
 
             <!-- 文本域 -->
             <block wx:elif="{{item.type === 'textarea'}}">
-              <textarea class="textarea" value="{{dynamicFormData[item.bindField]}}" bindinput="onDynamicInputChange"
-                data-field="{{item.bindField}}" placeholder="请输入{{item.title}}" rows="{{item.props.rows || 3}}" />
+              <textarea class="textarea" value="{{dynamicFormData[item.bindField]}}" bindinput="onDynamicInputChange" data-field="{{item.bindField}}" placeholder="请输入{{item.title}}" rows="{{item.props.rows || 3}}" />
             </block>
 
             <!-- 下拉选择 -->
             <block wx:elif="{{item.type === 'select'}}">
-              <picker mode="selector" range="{{item.pickerRangeLabels}}" value="{{item.pickerRangeIndex}}"
-                bindchange="onDynamicSelectChange" data-field="{{item.bindField}}" data-options="{{item.options}}">
+              <picker mode="selector" range="{{item.pickerRangeLabels}}" value="{{item.pickerRangeIndex}}" bindchange="onDynamicSelectChange" data-field="{{item.bindField}}" data-options="{{item.options}}">
                 <view class="picker-input">
                   {{dynamicFormData[item.bindField] ? item.selectedLabel : '请选择' + item.title}}
                 </view>
@@ -72,8 +64,7 @@
 
             <!-- 数字输入框 -->
             <block wx:elif="{{item.type === 'number'}}">
-              <input class="input" type="number" value="{{dynamicFormData[item.bindField]}}"
-                bindinput="onDynamicInputChange" data-field="{{item.bindField}}" placeholder="请输入{{item.title}}" />
+              <input class="input" type="number" value="{{dynamicFormData[item.bindField]}}" bindinput="onDynamicInputChange" data-field="{{item.bindField}}" placeholder="请输入{{item.title}}" />
             </block>
 
             <!-- 暂不支持的类型提示 -->
@@ -100,8 +91,7 @@
       <view class="form-item">
         <text class="label">选择商品</text>
         <view class="product-selector">
-          <view wx:for="{{productList}}" wx:key="id" class="product-item {{item.selected ? 'selected' : ''}}"
-            bindtap="toggleProductSelection" data-id="{{item.id}}">
+          <view wx:for="{{productList}}" wx:key="id" class="product-item {{item.selected ? 'selected' : ''}}" bindtap="toggleProductSelection" data-id="{{item.id}}">
             <text class="product-name">{{item.name}}</text>
             <text class="product-price">¥{{item.price}}</text>
           </view>
@@ -118,8 +108,7 @@
           </view>
           <view class="quantity-control">
             <text class="quantity-btn" bindtap="decreaseQuantity" data-id="{{item.id}}">-</text>
-            <input class="quantity-input" type="number" value="{{item.quantity}}" bindinput="onQuantityChange"
-              data-id="{{item.id}}" />
+            <input class="quantity-input" type="number" value="{{item.quantity}}" bindinput="onQuantityChange" data-id="{{item.id}}" />
             <text class="quantity-btn" bindtap="increaseQuantity" data-id="{{item.id}}">+</text>
           </view>
         </view>
@@ -127,14 +116,12 @@
 
       <view class="form-item">
         <text class="label">快递单号</text>
-        <input class="input" value="{{formData.expressNumber}}" bindinput="onInputChange" data-field="expressNumber"
-          placeholder="请输入快递单号" />
+        <input class="input" value="{{formData.expressNumber}}" bindinput="onInputChange" data-field="expressNumber" placeholder="请输入快递单号" />
       </view>
 
       <view class="form-item">
         <text class="label">备注</text>
-        <textarea class="textarea" value="{{formData.remark}}" bindinput="onInputChange" data-field="remark"
-          placeholder="请输入备注信息" />
+        <textarea class="textarea" value="{{formData.remark}}" bindinput="onInputChange" data-field="remark" placeholder="请输入备注信息" />
       </view>
 
       <view class="form-item">

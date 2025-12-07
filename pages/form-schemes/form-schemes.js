@@ -1,6 +1,14 @@
-const { fetchPlans, searchPlans, fetchFormTemplate } = require('../../services/form-schemes');
-const { fetchProducts, searchProducts } = require('../../services/product');
-const { submitOrder } = require('../../services/order');
+const {
+  fetchPlans,
+  fetchFormTemplate
+} = require('../../services/form-schemes');
+const {
+  fetchProducts,
+  searchProducts
+} = require('../../services/product');
+const {
+  submitOrder
+} = require('../../services/order');
 
 Page({
   /**
@@ -46,8 +54,14 @@ Page({
         labelPosition: 'right',
         hideRequiredAsterisk: false
       },
-      resetBtn: { show: false, innerText: '重置' },
-      submitBtn: { show: true, innerText: '提交' }
+      resetBtn: {
+        show: false,
+        innerText: '重置'
+      },
+      submitBtn: {
+        show: true,
+        innerText: '提交'
+      }
     },
     dynamicFormData: {} // 动态表单收集的数据
   },
@@ -56,7 +70,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
-    const { type } = options;
+    const {
+      type
+    } = options;
     this.setData({
       formType: type || 'normal'
     });
@@ -72,24 +88,34 @@ Page({
    * 获取方案列表
    */
   getPlanList() {
-    this.setData({ isLoadingPlans: true });
+    this.setData({
+      isLoadingPlans: true
+    });
 
     fetchPlans()
       .then((list = []) => {
         this.setData({
           planList: list,
           filteredPlanList: list,
-          currentPlan: list[0] || null,
-          isLoadingPlans: false
+          // 不自动选择方案
+          planIndex: -1,
+          currentPlan: null,
+          planSearchText: '', // 输入框先保持空
+          isLoadingPlans: false,
+          // 确保动态表单区域也是空的
+          formTemplate: null,
+          dynamicFormRules: [],
+          dynamicFormData: {}
         });
-        // 如果有默认方案，加载其模板
-        if (list[0] && list[0].templateId) {
-          this.fetchAndParseFormTemplate(list[0].templateId);
-        }
       })
       .catch(() => {
-        wx.showToast({ title: '获取方案失败', icon: 'none' });
-        this.setData({ isLoadingPlans: false });
+        wx.showToast({
+          title: '获取方案失败',
+          icon: 'none'
+        });
+        this.setData({
+          isLoadingPlans: false
+        });
       });
   },
 
@@ -97,7 +123,9 @@ Page({
    * 获取商品列表
    */
   getProductList() {
-    this.setData({ isLoadingProducts: true });
+    this.setData({
+      isLoadingProducts: true
+    });
 
     fetchProducts()
       .then((list = []) => {
@@ -108,8 +136,13 @@ Page({
         });
       })
       .catch(() => {
-        wx.showToast({ title: '获取商品失败', icon: 'none' });
-        this.setData({ isLoadingProducts: false });
+        wx.showToast({
+          title: '获取商品失败',
+          icon: 'none'
+        });
+        this.setData({
+          isLoadingProducts: false
+        });
       });
   },
 
@@ -134,40 +167,6 @@ Page({
   },
 
   /**
-   * 执行方案搜索
-   */
-  searchPlans(searchText) {
-    if (this.data.searchTimer) {
-      clearTimeout(this.data.searchTimer);
-    }
-
-    if (!searchText) {
-      this.setData({
-        filteredPlanList: this.data.planList
-      });
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      this.setData({ isLoadingPlans: true });
-
-      searchPlans(searchText)
-        .then((list = []) => {
-          this.setData({
-            filteredPlanList: list,
-            isLoadingPlans: false
-          });
-        })
-        .catch(() => {
-          wx.showToast({ title: '搜索失败', icon: 'none' });
-          this.setData({ isLoadingPlans: false });
-        });
-    }, 500);
-
-    this.setData({ searchTimer: timer });
-  },
-
-  /**
    * 执行商品搜索
    */
   searchProducts(searchText) {
@@ -183,7 +182,9 @@ Page({
     }
 
     const timer = setTimeout(() => {
-      this.setData({ isLoadingProducts: true });
+      this.setData({
+        isLoadingProducts: true
+      });
 
       searchProducts(searchText)
         .then((list = []) => {
@@ -193,12 +194,19 @@ Page({
           });
         })
         .catch(() => {
-          wx.showToast({ title: '搜索失败', icon: 'none' });
-          this.setData({ isLoadingProducts: false });
+          wx.showToast({
+            title: '搜索失败',
+            icon: 'none'
+          });
+          this.setData({
+            isLoadingProducts: false
+          });
         });
     }, 500);
 
-    this.setData({ searchTimer: timer });
+    this.setData({
+      searchTimer: timer
+    });
   },
 
   /**
@@ -227,12 +235,13 @@ Page({
   selectPlan(e) {
     const index = e.currentTarget.dataset.index;
     const plan = this.data.filteredPlanList[index];
-    const planIndex = this.data.planList.findIndex(item => item.id === plan.id);
 
+    // 这里用当前下拉列表的 index 就够了，没必要再去原始 list 找索引
     this.setData({
-      planIndex: planIndex,
+      planIndex: index,
       currentPlan: plan,
       showPlanDropdown: false,
+      planSearchText: plan.name, // ✅ 让输入框显示选中的方案名
       formData: {
         address: plan.address || '',
         orderNumber: '',
@@ -259,7 +268,9 @@ Page({
    * 拉取并解析表单模板
    */
   fetchAndParseFormTemplate(templateId) {
-    wx.showLoading({ title: '加载表单模板...' });
+    wx.showLoading({
+      title: '加载表单模板...'
+    });
 
     fetchFormTemplate(templateId)
       .then((template) => {
@@ -275,8 +286,14 @@ Page({
             hideRequiredAsterisk: false,
             ...(rawOptions.form || {})
           },
-          resetBtn: rawOptions.resetBtn || { show: false, innerText: '重置' },
-          submitBtn: rawOptions.submitBtn || { show: true, innerText: '提交' }
+          resetBtn: rawOptions.resetBtn || {
+            show: false,
+            innerText: '重置'
+          },
+          submitBtn: rawOptions.submitBtn || {
+            show: true,
+            innerText: '提交'
+          }
         };
 
         this.setData({
@@ -287,7 +304,10 @@ Page({
         });
       })
       .catch(() => {
-        wx.showToast({ title: '加载表单模板失败', icon: 'none' });
+        wx.showToast({
+          title: '加载表单模板失败',
+          icon: 'none'
+        });
       })
       .finally(() => {
         wx.hideLoading();
@@ -398,7 +418,9 @@ Page({
       }
       return rule;
     });
-    this.setData({ dynamicFormRules: dynamicRules });
+    this.setData({
+      dynamicFormRules: dynamicRules
+    });
   },
 
   /**
@@ -423,7 +445,9 @@ Page({
       }
       return rule;
     });
-    this.setData({ dynamicFormRules: dynamicRules });
+    this.setData({
+      dynamicFormRules: dynamicRules
+    });
   },
 
   /**
@@ -474,7 +498,9 @@ Page({
     const id = e.currentTarget.dataset.id;
 
     const selectedProducts = this.data.selectedProducts.filter(item => item.id !== id);
-    this.setData({ selectedProducts: selectedProducts });
+    this.setData({
+      selectedProducts: selectedProducts
+    });
 
     // 取消商品选中状态
     const productList = [...this.data.productList];
@@ -507,7 +533,9 @@ Page({
 
     if (index !== -1 && selectedProducts[index].quantity > 1) {
       selectedProducts[index].quantity -= 1;
-      this.setData({ selectedProducts: selectedProducts });
+      this.setData({
+        selectedProducts: selectedProducts
+      });
       this.calculateMarketExpectedReturn();
     }
   },
@@ -522,7 +550,9 @@ Page({
 
     if (index !== -1) {
       selectedProducts[index].quantity += 1;
-      this.setData({ selectedProducts: selectedProducts });
+      this.setData({
+        selectedProducts: selectedProducts
+      });
       this.calculateMarketExpectedReturn();
     }
   },
@@ -538,7 +568,9 @@ Page({
 
     if (index !== -1) {
       selectedProducts[index].quantity = value < 1 ? 1 : value;
-      this.setData({ selectedProducts: selectedProducts });
+      this.setData({
+        selectedProducts: selectedProducts
+      });
       this.calculateMarketExpectedReturn();
     }
   },
@@ -585,8 +617,57 @@ Page({
    */
   onPlanSearchInput(e) {
     const value = e.detail.value;
-    this.setData({ planSearchText: value });
-    this.searchPlans(value);
+
+    // 文本框自身回显
+    this.setData({
+      planSearchText: value,
+    });
+
+    // 防抖：清除上一次定时器
+    if (this.data.searchTimer) {
+      clearTimeout(this.data.searchTimer);
+    }
+
+    const kw = (value || '').trim();
+
+    // 如果输入为空，恢复原始列表，顺便可以关闭下拉
+    if (!kw) {
+      this.setData({
+        filteredPlanList: this.data.planList,
+        isLoadingPlans: false,
+        showPlanDropdown: false, // 或者 true，看你想不想一直展开
+      });
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      this.setData({
+        isLoadingPlans: true,
+        showPlanDropdown: true, // ✅ 输入时自动展开下拉列表，这样你能看到变化
+      });
+
+      // ✅ 这里是“引入的函数”，不是 this.fetchPlans
+      fetchPlans(kw)
+        .then((list = []) => {
+          this.setData({
+            filteredPlanList: list, // ✅ 用搜索结果覆盖下拉列表
+            isLoadingPlans: false,
+          });
+        })
+        .catch(() => {
+          wx.showToast({
+            title: '搜索失败',
+            icon: 'none',
+          });
+          this.setData({
+            isLoadingPlans: false,
+          });
+        });
+    }, 300); // 防抖时间可以自己调
+
+    this.setData({
+      searchTimer: timer,
+    });
   },
 
   /**
@@ -594,7 +675,9 @@ Page({
    */
   onProductSearchInput(e) {
     const value = e.detail.value;
-    this.setData({ productSearchText: value });
+    this.setData({
+      productSearchText: value
+    });
     this.searchProducts(value);
   },
 
@@ -620,7 +703,10 @@ Page({
    */
   saveDraft() {
     // 草稿保存逻辑（根据需求实现）
-    wx.showToast({ title: '草稿保存成功', icon: 'success' });
+    wx.showToast({
+      title: '草稿保存成功',
+      icon: 'success'
+    });
   },
 
   /**
@@ -628,14 +714,21 @@ Page({
    */
   async submitForm() {
     const {
-      formType, formData, currentPlan, selectedProducts,
-      dynamicFormRules, dynamicFormData
+      formType,
+      formData,
+      currentPlan,
+      selectedProducts,
+      dynamicFormRules,
+      dynamicFormData
     } = this.data;
 
     // 普通方案报单验证
     if (formType === 'normal') {
       if (!currentPlan) {
-        wx.showToast({ title: '请选择方案', icon: 'none' });
+        wx.showToast({
+          title: '请选择方案',
+          icon: 'none'
+        });
         return;
       }
 
@@ -650,24 +743,36 @@ Page({
         }
       });
       if (requiredErrors.length > 0) {
-        wx.showToast({ title: requiredErrors[0], icon: 'none' });
+        wx.showToast({
+          title: requiredErrors[0],
+          icon: 'none'
+        });
         return;
       }
 
       // 核心字段验证
       if (!formData.expressNumber) {
-        wx.showToast({ title: '请输入快递单号', icon: 'none' });
+        wx.showToast({
+          title: '请输入快递单号',
+          icon: 'none'
+        });
         return;
       }
     }
     // 行情报单验证
     else if (formType === 'market') {
       if (selectedProducts.length === 0) {
-        wx.showToast({ title: '请选择至少一个商品', icon: 'none' });
+        wx.showToast({
+          title: '请选择至少一个商品',
+          icon: 'none'
+        });
         return;
       }
       if (!formData.expressNumber) {
-        wx.showToast({ title: '请输入快递单号', icon: 'none' });
+        wx.showToast({
+          title: '请输入快递单号',
+          icon: 'none'
+        });
         return;
       }
     }
@@ -692,14 +797,22 @@ Page({
     };
 
     try {
-      wx.showLoading({ title: '提交中...' });
+      wx.showLoading({
+        title: '提交中...'
+      });
       await submitOrder(submitData);
-      wx.showToast({ title: '提交成功', icon: 'success' });
+      wx.showToast({
+        title: '提交成功',
+        icon: 'success'
+      });
       setTimeout(() => {
         wx.navigateBack();
       }, 1500);
     } catch (err) {
-      wx.showToast({ title: err?.message || '提交失败', icon: 'none' });
+      wx.showToast({
+        title: err?.message || '提交失败',
+        icon: 'none'
+      });
     } finally {
       wx.hideLoading();
     }
@@ -708,35 +821,35 @@ Page({
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady() { },
+  onReady() {},
 
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow() { },
+  onShow() {},
 
   /**
    * 生命周期函数--监听页面隐藏
    */
-  onHide() { },
+  onHide() {},
 
   /**
    * 生命周期函数--监听页面卸载
    */
-  onUnload() { },
+  onUnload() {},
 
   /**
    * 页面相关事件处理函数--监听用户下拉动作
    */
-  onPullDownRefresh() { },
+  onPullDownRefresh() {},
 
   /**
    * 页面上拉触底事件的处理函数
    */
-  onReachBottom() { },
+  onReachBottom() {},
 
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage() { }
+  onShareAppMessage() {}
 });
