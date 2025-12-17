@@ -1,312 +1,207 @@
-/* 全局样式 */
-.container {
-  padding: 20rpx;
-  background-color: #f5f5f5;
+/* 页面整体样式 */
+.page-container {
+  padding-bottom: 120rpx;
+  background-color: #f9f9f9;
   min-height: 100vh;
 }
 
-.header {
-  padding: 30rpx 0;
-  border-bottom: 1px solid #e5e5e5;
-  margin-bottom: 20rpx;
-}
-
-.title {
-  font-size: 36rpx;
-  font-weight: bold;
-  color: #333;
-}
-
-.form-section {
+/* 方案选择区域样式 */
+.plan-select-area {
+  padding: 15rpx;
   background-color: #fff;
-  padding: 30rpx;
-  border-radius: 12rpx;
-  margin-bottom: 20rpx;
-}
-
-.form-item {
-  margin-bottom: 30rpx;
-}
-
-.label {
-  font-size: 28rpx;
-  color: #333;
   margin-bottom: 10rpx;
-  display: block;
 }
 
-.label.required {
-  color: #f56c6c;
-  position: relative;
+/* 商品选择区域样式 */
+.product-select-area {
+  padding: 15rpx;
+  background-color: #fff;
+  margin-bottom: 10rpx;
 }
 
-.label.required::before {
-  content: '*';
-  color: #f56c6c;
-  position: absolute;
-  left: -15rpx;
-  top: 0;
-}
-
-.input {
-  height: 80rpx;
-  border: 1px solid #e5e5e5;
-  border-radius: 8rpx;
-  padding: 0 20rpx;
-  font-size: 28rpx;
-  box-sizing: border-box;
-}
-
-.textarea {
-  min-height: 120rpx;
-  border: 1px solid #e5e5e5;
-  border-radius: 8rpx;
-  padding: 20rpx;
-  font-size: 28rpx;
-  box-sizing: border-box;
-}
-
-/* 组合输入框+下拉 */
-.combined-input-select {
+/* 搜索输入框通用样式 */
+.search-input-wrap {
   display: flex;
   align-items: center;
-  border: 1px solid #e5e5e5;
-  border-radius: 8rpx;
-  overflow: hidden;
+  gap: 10rpx;
 }
 
-.input-with-select {
+.search-input {
   flex: 1;
   height: 80rpx;
+  line-height: 80rpx;
   padding: 0 20rpx;
-  font-size: 28rpx;
-  border: none;
-  outline: none;
-}
-
-.select-arrow {
-  width: 80rpx;
-  height: 80rpx;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-left: 1px solid #e5e5e5;
-}
-
-.dropdown-icon {
-  font-size: 24rpx;
-  color: #999;
-}
-
-/* 下拉列表 */
-.dropdown-list {
-  margin-top: 10rpx;
-  border: 1px solid #e5e5e5;
+  border: 1rpx solid #e5e5e5;
   border-radius: 8rpx;
-  background-color: #fff;
+  font-size: 28rpx;
+}
+
+.dropdown-btn {
+  padding: 0 20rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  font-size: 26rpx;
+  background: #f5f5f5;
+  border-radius: 8rpx;
+}
+
+/* 方案下拉列表样式 */
+.plan-dropdown {
+  margin-top: 10rpx;
+  border: 1rpx solid #e5e5e5;
+  border-radius: 8rpx;
+  background: #fff;
   max-height: 400rpx;
   overflow-y: auto;
 }
 
-.dropdown-item {
+/* 商品下拉列表样式 */
+.product-dropdown {
+  margin-top: 10rpx;
+  border: 1rpx solid #e5e5e5;
+  border-radius: 8rpx;
+  background: #fff;
+  max-height: 400rpx;
+  overflow-y: auto;
+}
+
+/* 加载/空数据提示 */
+.loading-tip, .empty-tip {
+  padding: 20rpx;
+  font-size: 26rpx;
+  color: #999;
+  text-align: center;
+}
+
+/* 方案项样式 */
+.plan-item {
   padding: 20rpx;
   font-size: 28rpx;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+.plan-item:last-child {
+  border-bottom: none;
 }
 
-.dropdown-item.active {
-  background-color: #f0f9ff;
-  color: #1677ff;
-}
-
-.dropdown-empty {
-  padding: 30rpx;
-  text-align: center;
+/* 商品项样式 */
+.product-item {
+  padding: 20rpx;
   font-size: 28rpx;
+  border-bottom: 1rpx solid #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.product-item:last-child {
+  border-bottom: none;
+}
+.product-price {
+  color: #f60;
+  margin-left: 20rpx;
+}
+
+/* 已选商品样式 */
+.selected-products {
+  margin-top: 20rpx;
+  padding: 10rpx;
+  border: 1rpx solid #e5e5e5;
+  border-radius: 8rpx;
+}
+.selected-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  margin-bottom: 10rpx;
+}
+.selected-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10rpx 0;
+  border-bottom: 1rpx solid #f5f5f5;
+}
+.selected-item:last-child {
+  border-bottom: none;
+}
+.item-info {
+  flex: 2;
+  font-size: 26rpx;
+}
+.item-price {
   color: #999;
+  margin-left: 10rpx;
+}
+.item-quantity {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10rpx;
+}
+.item-quantity input {
+  width: 60rpx;
+  text-align: center;
+  height: 40rpx;
+  line-height: 40rpx;
+}
+.remove-btn {
+  color: #f60;
+}
+.expected-return {
+  margin-top: 10rpx;
+  font-size: 28rpx;
+  color: #f60;
+  text-align: right;
 }
 
 /* 动态表单样式 */
-.dynamic-form {
-  margin-top: 20rpx;
+.dynamic-form-container {
+  padding: 15rpx;
+  background-color: #fff;
+  margin-bottom: 10rpx;
 }
 
-.checkbox-group {
+.form-item {
   display: flex;
-  flex-wrap: wrap;
-  gap: 20rpx;
-  padding: 10rpx 0;
+  flex-direction: column;
+  margin-bottom: 30rpx;
 }
 
-.checkbox-item {
-  display: flex;
-  align-items: center;
+.form-label {
   font-size: 28rpx;
+  color: #333;
+  margin-bottom: 10rpx;
 }
 
-.checkbox-label {
-  margin-left: 10rpx;
+.required {
+  color: #f00;
+  margin-left: 5rpx;
+}
+
+.form-input {
+  height: 80rpx;
+  line-height: 80rpx;
+  padding: 0 20rpx;
+  border: 1rpx solid #e5e5e5;
+  border-radius: 8rpx;
+  font-size: 28rpx;
 }
 
 .picker-input {
   height: 80rpx;
-  border: 1px solid #e5e5e5;
-  border-radius: 8rpx;
+  line-height: 80rpx;
   padding: 0 20rpx;
+  border: 1rpx solid #e5e5e5;
+  border-radius: 8rpx;
   font-size: 28rpx;
-  display: flex;
-  align-items: center;
   color: #666;
-  box-sizing: border-box;
 }
 
-.field-desc {
-  font-size: 24rpx;
-  color: #999;
-  margin-top: 8rpx;
-}
-
-.unsupported-field {
-  font-size: 26rpx;
-  color: #999;
-  padding: 20rpx;
-  text-align: center;
-}
-
-.empty-tip {
-  font-size: 28rpx;
-  color: #999;
-  text-align: center;
-  padding: 40rpx 0;
-}
-
-/* 行情报单样式 */
-.product-selector {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20rpx;
-  margin-top: 10rpx;
-}
-
-.product-item {
-  padding: 20rpx;
-  border: 1px solid #e5e5e5;
-  border-radius: 8rpx;
-  width: calc(50% - 10rpx);
-  box-sizing: border-box;
-}
-
-.product-item.selected {
-  border-color: #1677ff;
-  background-color: #f0f9ff;
-}
-
-.product-name {
-  font-size: 28rpx;
-  color: #333;
-  display: block;
-  margin-bottom: 10rpx;
-}
-
-.product-price {
-  font-size: 24rpx;
-  color: #f56c6c;
-}
-
-.selected-products {
-  margin-top: 30rpx;
-}
-
-.section-title {
-  font-size: 28rpx;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 20rpx;
-  display: block;
-}
-
-.selected-product-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx 0;
-  border-bottom: 1px solid #f5f5f5;
-}
-
-.product-info {
-  flex: 1;
-}
-
-.quantity-control {
-  display: flex;
-  align-items: center;
-}
-
-.quantity-btn {
-  width: 60rpx;
-  height: 60rpx;
-  border: 1px solid #e5e5e5;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 28rpx;
-  color: #333;
-}
-
-.quantity-input {
-  width: 80rpx;
-  height: 60rpx;
-  text-align: center;
-  font-size: 28rpx;
-  border-top: 1px solid #e5e5e5;
-  border-bottom: 1px solid #e5e5e5;
-  margin: 0 10rpx;
-  box-sizing: border-box;
-}
-
-.expected-return {
-  font-size: 28rpx;
-  color: #f56c6c;
-  padding: 20rpx 0;
-}
-
-/* 提交按钮区域 */
-.form-footer {
-  display: flex;
-  gap: 20rpx;
-  padding: 20rpx 0;
-}
-
-.draft-btn {
-  flex: 1;
-  height: 88rpx;
-  line-height: 88rpx;
-  background-color: #fff;
-  color: #333;
-  border: 1px solid #e5e5e5;
-  border-radius: 8rpx;
-  font-size: 32rpx;
-}
-
-.submit-btn {
-  flex: 1;
-  height: 88rpx;
-  line-height: 88rpx;
-  background-color: #1677ff;
-  color: #fff;
-  border-radius: 8rpx;
-  font-size: 32rpx;
-}
-
-/* 图片上传样式 */
-.upload-box {
+.image-upload {
   width: 200rpx;
   height: 200rpx;
-  border: 1px dashed #e5e5e5;
+  border: 1rpx dashed #e5e5e5;
   border-radius: 8rpx;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
 }
@@ -318,19 +213,51 @@
 }
 
 .upload-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.upload-icon {
-  font-size: 48rpx;
-  color: #ccc;
-  margin-bottom: 10rpx;
-}
-
-.upload-text {
   font-size: 24rpx;
   color: #999;
+}
+
+.form-textarea {
+  min-height: 150rpx;
+  padding: 20rpx;
+  border: 1rpx solid #e5e5e5;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  margin-right: 30rpx;
+  margin-bottom: 10rpx;
+  font-size: 28rpx;
+}
+
+/* 按钮样式 */
+.btn-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30rpx 15rpx;
+  display: flex;
+  gap: 20rpx;
+  background-color: #fff;
+  border-top: 1rpx solid #e5e5e5;
+}
+
+.draft-btn {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  background: #f5f5f5;
+  color: #333;
+  border-radius: 8rpx;
+}
+
+.submit-btn {
+  flex: 1;
+  height: 88rpx;
+  line-height: 88rpx;
+  border-radius: 8rpx;
 }

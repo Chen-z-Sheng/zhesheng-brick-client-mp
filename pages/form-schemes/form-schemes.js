@@ -7,7 +7,7 @@ const {
   searchProducts
 } = require('../../services/product');
 const {
-  submitOrder
+  saveFormSubmission, // ✅ 替换成保存表单提交记录的方法
 } = require('../../services/order');
 
 Page({
@@ -24,15 +24,6 @@ Page({
     planInputFocus: false, // 方案输入框是否获取焦点
     isLoadingPlans: false, // 是否正在加载方案
     currentPlan: null, // 当前选中的方案
-    formData: {
-      address: '',
-      orderNumber: '',
-      expressNumber: '',
-      orderImage: '',
-      quantity: '',
-      expectedReturn: '0.00',
-      remark: ''
-    },
     productList: [], // 商品列表
     filteredProductList: [], // 过滤后的商品列表
     productSearchText: '', // 商品搜索文本
@@ -40,10 +31,10 @@ Page({
     productInputFocus: false, // 商品输入框是否获取焦点
     isLoadingProducts: false, // 是否正在加载商品
     selectedProducts: [], // 已选商品列表
-    expectedReturn: '0.00', // 预计回款金额
+    expectedReturn: '0.00', // 预计回款金额（行情报单用）
     searchTimer: null, // 用于延时搜索的定时器
 
-    // 动态表单新增字段
+    // 动态表单核心数据（完全接管表单渲染/数据/验证）
     formTemplate: null, // 当前方案对应的表单模板
     dynamicFormRules: [], // 解析后的动态表单规则
     dynamicFormOptions: { // 默认表单配置
@@ -63,7 +54,7 @@ Page({
         innerText: '提交'
       }
     },
-    dynamicFormData: {} // 动态表单收集的数据
+    dynamicFormData: {} // 所有表单数据都存储在这里
   },
 
   /**
@@ -97,12 +88,11 @@ Page({
         this.setData({
           planList: list,
           filteredPlanList: list,
-          // 不自动选择方案
           planIndex: -1,
           currentPlan: null,
-          planSearchText: '', // 输入框先保持空
+          planSearchText: '',
           isLoadingPlans: false,
-          // 确保动态表单区域也是空的
+          // 清空动态表单相关数据
           formTemplate: null,
           dynamicFormRules: [],
           dynamicFormData: {}
@@ -236,38 +226,31 @@ Page({
     const index = e.currentTarget.dataset.index;
     const plan = this.data.filteredPlanList[index];
 
-    // 这里用当前下拉列表的 index 就够了，没必要再去原始 list 找索引
     this.setData({
       planIndex: index,
       currentPlan: plan,
       showPlanDropdown: false,
-      planSearchText: plan.name, // ✅ 让输入框显示选中的方案名
-      formData: {
-        address: plan.address || '',
-        orderNumber: '',
-        expressNumber: '',
-        orderImage: '',
-        quantity: '',
-        expectedReturn: '0.00',
-        remark: ''
-      },
-      dynamicFormData: {}
+      planSearchText: plan.name,
+      dynamicFormData: {} // 清空动态表单数据
     });
 
     if (plan.templateId) {
-      this.fetchAndParseFormTemplate(plan.templateId);
+      this.fetchAndParseFormTemplate(plan.templateId, plan); // 传入plan用于默认值注入
     } else {
       this.setData({
         formTemplate: null,
-        dynamicFormRules: []
+        dynamicFormRules: [],
+        dynamicFormData: {}
       });
     }
   },
 
   /**
    * 拉取并解析表单模板
+   * @param {string} templateId 模板ID
+   * @param {object} plan 选中的方案（用于注入默认值）
    */
-  fetchAndParseFormTemplate(templateId) {
+  fetchAndParseFormTemplate(templateId, plan) {
     wx.showLoading({
       title: '加载表单模板...'
     });
@@ -276,7 +259,7 @@ Page({
       .then((template) => {
         const dynamicRules = this.parseFormRules(template.ruleJson);
         const rawOptions = template.optionJson || {};
-        // 合并表单配置，避免可选链
+        // 合并表单配置
         const dynamicOptions = {
           form: {
             size: 'default',
@@ -296,11 +279,18 @@ Page({
           }
         };
 
+        // 初始化动态表单数据，并注入方案的默认值（如address）
+        const initData = this.initDynamicFormData(dynamicRules);
+        if (plan?.address) {
+          // 需确保模板中存在address字段才会生效
+          initData.address = plan.address;
+        }
+
         this.setData({
           formTemplate: template,
           dynamicFormRules: dynamicRules,
           dynamicFormOptions: dynamicOptions,
-          dynamicFormData: this.initDynamicFormData(dynamicRules)
+          dynamicFormData: initData
         });
       })
       .catch(() => {
@@ -315,15 +305,15 @@ Page({
   },
 
   /**
-   * 解析form-create的rule_json
+   * 解析form-create的rule_json（增强版，支持更多组件类型）
    */
   parseFormRules(ruleJson) {
     if (!Array.isArray(ruleJson)) return [];
 
     return ruleJson.map(rule => {
-      // 处理props默认值，避免undefined
+      // 处理props默认值
       const props = rule.props || {};
-      // 处理下拉选择的选项和索引
+      // 处理下拉选择的选项
       const pickerRangeLabels = [];
       const pickerRangeValues = [];
       let pickerRangeIndex = 0;
@@ -333,21 +323,37 @@ Page({
         rule.options.forEach((opt, idx) => {
           pickerRangeLabels.push(opt.label);
           pickerRangeValues.push(opt.value);
+          // 初始化选中状态（如果有默认值）
+          if (rule.value === opt.value) {
+            pickerRangeIndex = idx;
+            selectedLabel = opt.label;
+          }
         });
+      }
+
+      // 处理输入框类型
+      let inputType = 'text';
+      if (rule.type === 'password') {
+        inputType = 'password';
+      } else if (rule.type === 'number') {
+        inputType = 'number';
+      } else if (props.type) {
+        inputType = props.type;
       }
 
       return {
         ...rule,
-        bindField: rule.field || rule.name || '',
-        required: rule.$required || false,
-        inputType: props.type || (rule.type === 'password' ? 'password' : 'text'),
-        options: rule.options || [],
-        pickerRangeLabels: pickerRangeLabels,
-        pickerRangeValues: pickerRangeValues,
-        pickerRangeIndex: pickerRangeIndex,
-        selectedLabel: selectedLabel,
-        disabled: rule.disabled || false,
-        props: props
+        bindField: rule.title || rule.name || '', // 字段标识
+        required: rule.$required || false, // 必填标识（后端已经补好了 $required）
+        inputType: inputType, // 输入框类型
+        options: rule.options || [], // 下拉选项
+        pickerRangeLabels: pickerRangeLabels, // 下拉标签列表
+        pickerRangeValues: pickerRangeValues, // 下拉值列表
+        pickerRangeIndex: pickerRangeIndex, // 选中索引
+        selectedLabel: selectedLabel, // 选中标签
+        disabled: rule.disabled || false, // 是否禁用
+        props: props, // 组件属性
+        componentType: rule.type || 'input' // 组件类型（用于WXML渲染）
       };
     });
   },
@@ -368,7 +374,7 @@ Page({
   },
 
   /**
-   * 动态表单输入变化处理
+   * 动态表单输入变化处理（文本、数字等）
    */
   onDynamicInputChange(e) {
     const field = e.currentTarget.dataset.field;
@@ -377,7 +383,7 @@ Page({
       [`dynamicFormData.${field}`]: value
     });
 
-    // 更新下拉选择的标签和索引
+    // 更新下拉选择的标签和索引（针对手动输入的select类型）
     this.updateSelectLabel(field, value);
   },
 
@@ -407,7 +413,7 @@ Page({
       [`dynamicFormData.${field}`]: selectedValue
     });
 
-    // 更新规则中的选中标签和索引
+    // 更新规则中的选中状态
     const dynamicRules = this.data.dynamicFormRules.map(rule => {
       if (rule.bindField === field) {
         return {
@@ -424,7 +430,7 @@ Page({
   },
 
   /**
-   * 更新下拉选择的标签
+   * 更新下拉选择的标签（针对手动输入的情况）
    */
   updateSelectLabel(field, value) {
     const dynamicRules = this.data.dynamicFormRules.map(rule => {
@@ -447,6 +453,30 @@ Page({
     });
     this.setData({
       dynamicFormRules: dynamicRules
+    });
+  },
+
+  /**
+   * 动态图片选择（替代原硬编码的图片选择）
+   */
+  chooseDynamicImage(e) {
+    const field = e.currentTarget.dataset.field;
+    wx.chooseImage({
+      count: 1,
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera'],
+      success: (res) => {
+        const tempFilePath = res.tempFilePaths[0];
+        this.setData({
+          [`dynamicFormData.${field}`]: tempFilePath
+        });
+      },
+      fail: () => {
+        wx.showToast({
+          title: '图片选择失败',
+          icon: 'none'
+        });
+      }
     });
   },
 
@@ -602,40 +632,26 @@ Page({
   },
 
   /**
-   * 普通表单输入变化
-   */
-  onInputChange(e) {
-    const field = e.currentTarget.dataset.field;
-    const value = e.detail.value;
-    this.setData({
-      [`formData.${field}`]: value
-    });
-  },
-
-  /**
    * 方案搜索输入
    */
   onPlanSearchInput(e) {
     const value = e.detail.value;
 
-    // 文本框自身回显
     this.setData({
       planSearchText: value,
     });
 
-    // 防抖：清除上一次定时器
     if (this.data.searchTimer) {
       clearTimeout(this.data.searchTimer);
     }
 
     const kw = (value || '').trim();
 
-    // 如果输入为空，恢复原始列表，顺便可以关闭下拉
     if (!kw) {
       this.setData({
         filteredPlanList: this.data.planList,
         isLoadingPlans: false,
-        showPlanDropdown: false, // 或者 true，看你想不想一直展开
+        showPlanDropdown: false,
       });
       return;
     }
@@ -643,14 +659,13 @@ Page({
     const timer = setTimeout(() => {
       this.setData({
         isLoadingPlans: true,
-        showPlanDropdown: true, // ✅ 输入时自动展开下拉列表，这样你能看到变化
+        showPlanDropdown: true,
       });
 
-      // ✅ 这里是“引入的函数”，不是 this.fetchPlans
       fetchPlans(kw)
         .then((list = []) => {
           this.setData({
-            filteredPlanList: list, // ✅ 用搜索结果覆盖下拉列表
+            filteredPlanList: list,
             isLoadingPlans: false,
           });
         })
@@ -663,7 +678,7 @@ Page({
             isLoadingPlans: false,
           });
         });
-    }, 300); // 防抖时间可以自己调
+    }, 300);
 
     this.setData({
       searchTimer: timer,
@@ -682,40 +697,69 @@ Page({
   },
 
   /**
-   * 选择图片
+   * 公共：构造提交/草稿的 payload
    */
-  chooseImage() {
-    wx.chooseImage({
-      count: 1,
-      sizeType: ['original', 'compressed'],
-      sourceType: ['album', 'camera'],
-      success: (res) => {
-        const tempFilePath = res.tempFilePaths[0];
-        this.setData({
-          [`formData.orderImage`]: tempFilePath
-        });
-      }
-    });
+  buildSubmitData() {
+    const {
+      formType,
+      currentPlan,
+      selectedProducts,
+      dynamicFormData
+    } = this.data;
+
+    return {
+      type: formType,
+      planId: formType === 'normal' && currentPlan ? currentPlan.id : null,
+      templateId: formType === 'normal' && currentPlan ? currentPlan.templateId : null,
+      products: formType === 'market' ?
+        selectedProducts.map(p => ({
+          id: p.id,
+          quantity: p.quantity
+        })) :
+        null,
+      dynamicFormData: dynamicFormData,
+      expectedReturn: formType === 'normal' ?
+        (dynamicFormData.expectedReturn || '0.00') :
+        this.data.expectedReturn
+    };
   },
 
   /**
-   * 保存草稿
+   * 保存草稿：不做必填校验，直接 status=0
    */
-  saveDraft() {
-    // 草稿保存逻辑（根据需求实现）
-    wx.showToast({
-      title: '草稿保存成功',
-      icon: 'success'
-    });
+  async saveDraft() {
+    const submitData = this.buildSubmitData();
+
+    try {
+      wx.showLoading({
+        title: '保存草稿中...'
+      });
+
+      await saveFormSubmission({
+        ...submitData,
+        status: 0, // 0 = 草稿
+      });
+
+      wx.showToast({
+        title: '草稿保存成功',
+        icon: 'success'
+      });
+    } catch (err) {
+      wx.showToast({
+        title: err?.message || '草稿保存失败',
+        icon: 'none'
+      });
+    } finally {
+      wx.hideLoading();
+    }
   },
 
   /**
-   * 提交表单
+   * 提交表单（核心改造：依赖动态表单 + status=1）
    */
   async submitForm() {
     const {
       formType,
-      formData,
       currentPlan,
       selectedProducts,
       dynamicFormRules,
@@ -732,7 +776,7 @@ Page({
         return;
       }
 
-      // 验证动态表单必填项
+      // 动态表单必填项验证
       const requiredErrors = [];
       dynamicFormRules.forEach(rule => {
         if (rule.required) {
@@ -749,15 +793,6 @@ Page({
         });
         return;
       }
-
-      // 核心字段验证
-      if (!formData.expressNumber) {
-        wx.showToast({
-          title: '请输入快递单号',
-          icon: 'none'
-        });
-        return;
-      }
     }
     // 行情报单验证
     else if (formType === 'market') {
@@ -768,39 +803,39 @@ Page({
         });
         return;
       }
-      if (!formData.expressNumber) {
+
+      // 行情报单如果有动态表单，也需要验证必填项
+      const requiredErrors = [];
+      dynamicFormRules.forEach(rule => {
+        if (rule.required) {
+          const value = dynamicFormData[rule.bindField];
+          if (!value || (Array.isArray(value) && value.length === 0)) {
+            requiredErrors.push(`请填写【${rule.title}】`);
+          }
+        }
+      });
+      if (requiredErrors.length > 0) {
         wx.showToast({
-          title: '请输入快递单号',
+          title: requiredErrors[0],
           icon: 'none'
         });
         return;
       }
     }
 
-    // 构造提交数据
-    const submitData = {
-      type: formType,
-      planId: formType === 'normal' ? currentPlan.id : null,
-      templateId: formType === 'normal' ? currentPlan.templateId : null,
-      products: formType === 'market' ? selectedProducts.map(p => ({
-        id: p.id,
-        quantity: p.quantity
-      })) : null,
-      expressNumber: formData.expressNumber,
-      remark: formData.remark,
-      dynamicFormData: dynamicFormData,
-      address: formData.address,
-      orderNumber: formData.orderNumber,
-      quantity: formData.quantity,
-      orderImage: formData.orderImage,
-      expectedReturn: formType === 'normal' ? formData.expectedReturn : this.data.expectedReturn
-    };
+    // 构造提交数据（和草稿共用）
+    const submitData = this.buildSubmitData();
 
     try {
       wx.showLoading({
         title: '提交中...'
       });
-      await submitOrder(submitData);
+
+      await saveFormSubmission({
+        ...submitData,
+        status: 1, // 1 = 已提交
+      });
+
       wx.showToast({
         title: '提交成功',
         icon: 'success'

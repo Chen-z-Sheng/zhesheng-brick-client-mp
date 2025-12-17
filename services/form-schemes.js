@@ -28,8 +28,14 @@ const fetchFormTemplate = (templateId) => {
 };
 
 // 添加填写记录
+const saveFormSubmission = (payload) => {
+  return request
+    .post('/api/client/form-submissions', payload)
+    .then((res) => res?.data || res);
+};
 
 module.exports = {
   fetchPlans,
-  fetchFormTemplate
+  fetchFormTemplate,
+  saveFormSubmission
 };
