@@ -343,7 +343,8 @@ Page({
 
       return {
         ...rule,
-        bindField: rule.title || rule.name || '', // 字段标识
+        bindFieName: rule.title, // 字段标识
+        bindField: rule.field,
         required: rule.$required || false, // 必填标识（后端已经补好了 $required）
         inputType: inputType, // 输入框类型
         options: rule.options || [], // 下拉选项
@@ -704,23 +705,40 @@ Page({
       formType,
       currentPlan,
       selectedProducts,
-      dynamicFormData
+      dynamicFormData,
+      dynamicFormRules,
     } = this.data;
+
+    // ✅ 把每个字段的信息拼成一个对象：field + label + value
+    const formFields = dynamicFormRules.map(rule => {
+      const fieldId = rule.bindField; // 唯一标识（rule.field）
+      const label = rule.bindFieName || rule.title; // 字段名称
+      const value = dynamicFormData[fieldId]; // 用户填的值
+
+      return {
+        field: fieldId,
+        label,
+        value,
+        componentType: rule.componentType, // 看情况要不要带上
+        required: !!rule.required,
+      };
+    });
 
     return {
       type: formType,
       planId: formType === 'normal' && currentPlan ? currentPlan.id : null,
-      templateId: formType === 'normal' && currentPlan ? currentPlan.templateId : null,
       products: formType === 'market' ?
         selectedProducts.map(p => ({
           id: p.id,
           quantity: p.quantity
-        })) :
-        null,
-      dynamicFormData: dynamicFormData,
-      expectedReturn: formType === 'normal' ?
-        (dynamicFormData.expectedReturn || '0.00') :
-        this.data.expectedReturn
+        })) : null,
+
+      // ✅ 改成发结构化数据，而不是裸的 key-value
+      dynamicFormData: {
+        fields: formFields,
+        expectedReturn: formType === 'normal' ?
+          (dynamicFormData.expectedReturn || '0.00') : this.data.expectedReturn,
+      },
     };
   },
 
